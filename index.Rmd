@@ -1,12 +1,15 @@
 % About
+---
+bibliography: "ref/packages.bib"
+csl: biomed-central.csl
+---
 
 This repository is the analysis for  the manuscript entitled: Detection of virulence to septoria tritici blotch (STB) resistance conferred by the winter wheat cultivar Cougar in the Irish *Zymoseptoria tritici* population and potential implications for STB control.  
   
 **The open-access publication of the manuscript can be found** 
 
-  The repository is built on the example research compendium provided by Emerson Del Ponte [here](https://github.com/emdelponte/research-compendium-website).
 
-The funding for this project comes from [DAFM (Department of Agriculture, Food and Marine)](https://www.agriculture.gov.ie). 
+The funding for this project comes from [Teagasc ](https://www.teagasc.ie/) (Agriculture and Food Development Authority)(project code 0154)  . 
 
 ## Notes 
 
@@ -26,7 +29,18 @@ Maynooth University:
 - [Fiona Hutton](https://www.teagasc.ie/contact/staff-directory/h/fiona-hutton/)
 
 
-## Citation
+## Packages used in the analysis
+
+```{r echo=F}
+library(tidyverse)
+pckgs <- 
+lapply(list.files(here::here("ref"), full.names = T, pattern = ".rds"), readRDS) %>% 
+  flatten_chr() %>%
+  unique()
+
+knitr::write_bib(c(pckgs, "bookdown"), "ref/packages.bib")
+```
+
 
 
 
@@ -40,3 +54,4 @@ Code: [MIT](https://opensource.org/licenses/MIT) year: 2019, copyright holder: M
 
 We welcome contributions from everyone. Before you get started, please see our [contributor guidelines](CONTRIBUTING.html). Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.html). By participating in this project you agree to abide by its terms.
 
+# References

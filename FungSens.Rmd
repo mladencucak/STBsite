@@ -1,11 +1,12 @@
 ---
-title: "Fungicide sensitivity"
+title: "Fungicide sensitivity assessments"
 output:
   html_document
 ---
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=6.5, fig.height=5,
                       echo=FALSE, warning=FALSE, message=FALSE)
+
 ```
 
 ## Load packages
@@ -53,12 +54,19 @@ if (any(as.numeric(packages_load) == 0)) {
 } else {
   print("All packages were successfully loaded.")
 }
+
+#Save list of packages used in the analysis
+saveRDS(list.of.packages, here::here(paste0("ref/fungsens_packages.rds")))
+
+        
+list.of.packages
+
 rm(list.of.packages, new.packages, packages_load)
 
 #if instal is not working try 
 #install.packages("ROCR", repos = c(CRAN="https://cran.r-project.org/"))
 ```
-
+## Import data
 ```{r importdata, warning = FALSE, message= FALSE}
 dta <- read_excel("dta/Fungicide.xlsx", 
                 sheet = "Sheet1",
@@ -67,7 +75,7 @@ summary(dta)
 dta <- 
   pivot_wider(dta, names_from  = "Chemical", values_from = "EC50" )
 ```
-
+## Fitting models
 ```{r}
 one.way <- aov(APN ~ Year, data = dta)
 
@@ -272,6 +280,8 @@ hsd<-HSD.test(one.way, "Year")
 hsd
 ```
 
+
+
 ```{r}
 df_let <- bind_rows(df_let,GetLetters(hsd, "TBZ"))
 
@@ -285,6 +295,7 @@ dta <-
              values_to = "EC50")
 ```
 
+## Publication plot
 Prepare the data for plotting. 
 
 ```{r}
@@ -367,7 +378,7 @@ plotdata %>%
   ) 
 ```
 
-## Correlations
+## Cross-resistance between fungicides 
 
 ```{r}
 dta <- 
@@ -375,7 +386,7 @@ dta <-
 dta <- dta[c("APN","FNX","FLX","MFZ","PDZ","TBZ")]
 ```
 
-
+### Correlation charts
 ```{r}
 chart.Correlation(dta)
 ```
@@ -432,7 +443,7 @@ p.mat
 
 ```
 
-plot correlation
+### Publication plot
 ```{r}
 col <-
   colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))

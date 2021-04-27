@@ -1,5 +1,6 @@
 ---
-title: "Cougar screen"
+title: "Cougar specific virulence screen"
+bibliography: "packages.bib"
 output:
   html_document:
     df_print: paged
@@ -48,6 +49,10 @@ if (any(as.numeric(packages_load) == 0)) {
 } else {
   print("All packages were successfully loaded.")
 }
+#Save list of packages used in the analysis
+saveRDS(list.of.packages, here::here(paste0("ref/assay1a_packages.rds")))
+
+
 rm(list.of.packages, new.packages, packages_load)
 
 #if instal is not working try 
@@ -150,7 +155,7 @@ t1 <- broom.mixed::tidy(fit, conf.int = TRUE)
 ```
 
 
-
+## Posthoc
 ```{r}
 d1 <- effect("Variety_Source", fit)   # save the estimates for your target effect
 d1 <-as.data.frame(d1)
@@ -168,7 +173,7 @@ posthoclett <-
 
 ```
 
-
+## Final plot
 
 ```{r plot,  warning = FALSE, message= FALSE}
 left_join(dta, d1, by = "Variety_Source") %>%
@@ -211,3 +216,5 @@ left_join(dta, d1, by = "Variety_Source") %>%
     dpi =300
   ) 
 ```
+
+# References

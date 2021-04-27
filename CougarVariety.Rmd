@@ -1,5 +1,5 @@
 ---
-title: "Cougar varieties screen"
+title: "Commercial Cougar derived cultivars screen"
 output:
   html_document:
     df_print: paged
@@ -46,7 +46,7 @@ if (any(as.numeric(packages_load) == 0)) {
 }
 
 #Save list of packages used in the analysis
-knitr::write_bib(file = here::here(paste0("ref/", rmarkdown::metadata$title,"packages.bib")))
+saveRDS(list.of.packages, here::here(paste0("ref/assay1b_packages.rds")))
 
 rm(list.of.packages, new.packages, packages_load)
 
@@ -68,7 +68,7 @@ gt(head(dta))
 ```
 
 
-
+## Data Visualisation
 ```{r}
 dta %>%
   ggplot() +
@@ -170,8 +170,8 @@ posthoclett <-
 
 ```
 
-
-prepare data for plotting
+## Publication plot
+Prepare data for plotting,
 ```{r}
 plotdata <- 
 left_join(dta, d1, by = "Variety_Source") %>%
@@ -190,6 +190,7 @@ left_join(dta, d1, by = "Variety_Source") %>%
 
 ```
 
+Publication plot. 
 ```{r plot,  warning = FALSE, message= FALSE}
 (p1 <- 
 plotdata %>%
