@@ -11,7 +11,7 @@
 
 
 
-<title>Fungicide sensitivity</title>
+<title>Fungicide sensitivity assessments</title>
 
 <script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -366,7 +366,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Fungicide sensitivity</h1>
+<h1 class="title toc-ignore">Fungicide sensitivity assessments</h1>
 
 </div>
 
@@ -374,6 +374,17 @@ div.tocify {
 <div id="load-packages" class="section level2">
 <h2>Load packages</h2>
 <pre><code>## [1] &quot;All packages were successfully loaded.&quot;</code></pre>
+<pre><code>##  [1] &quot;dplyr&quot;                &quot;tidyr&quot;                &quot;ggplot2&quot;             
+##  [4] &quot;knitr&quot;                &quot;readxl&quot;               &quot;egg&quot;                 
+##  [7] &quot;car&quot;                  &quot;emmeans&quot;              &quot;effects&quot;             
+## [10] &quot;multcomp&quot;             &quot;broom&quot;                &quot;dotwhisker&quot;          
+## [13] &quot;broom.mixed&quot;          &quot;agricolae&quot;            &quot;ggpubr&quot;              
+## [16] &quot;ggplot2&quot;              &quot;knitr&quot;                &quot;here&quot;                
+## [19] &quot;PerformanceAnalytics&quot; &quot;readxl&quot;               &quot;Hmisc&quot;               
+## [22] &quot;GGally&quot;               &quot;corrplot&quot;</code></pre>
+</div>
+<div id="import-data" class="section level2">
+<h2>Import data</h2>
 <pre><code>##    Isolate              Year             Chemical              EC50        
 ##  Length:1614        Length:1614        Length:1614        Min.   :-3.0000  
 ##  Class :character   Class :character   Class :character   1st Qu.:-0.9819  
@@ -382,6 +393,9 @@ div.tocify {
 ##                                                           3rd Qu.: 0.3621  
 ##                                                           Max.   : 1.6358  
 ##                                                           NA&#39;s   :5</code></pre>
+</div>
+<div id="fitting-models" class="section level2">
+<h2>Fitting models</h2>
 <pre><code>##              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
 ## Year          4  25.31   6.326   18.41 2.34e-13 ***
 ## Residuals   264  90.72   0.344                     
@@ -746,14 +760,19 @@ div.tocify {
 ## attr(,&quot;class&quot;)
 ## [1] &quot;group&quot;</code></pre>
 <p>Convert the data in longer format.</p>
+</div>
+<div id="publication-plot" class="section level2">
+<h2>Publication plot</h2>
 <p>Prepare the data for plotting.</p>
 <p>Plot in one row.</p>
 <p><img src="FungSens_files/figure-html/unnamed-chunk-39-1.png" width="624" /></p>
 <p>Plot in two rows.</p>
 <p><img src="FungSens_files/figure-html/unnamed-chunk-40-1.png" width="624" /></p>
 </div>
-<div id="correlations" class="section level2">
-<h2>Correlations</h2>
+<div id="cross-resistance-between-fungicides" class="section level2">
+<h2>Cross-resistance between fungicides</h2>
+<div id="correlation-charts" class="section level3">
+<h3>Correlation charts</h3>
 <p><img src="FungSens_files/figure-html/unnamed-chunk-42-1.png" width="624" /></p>
 <pre><code>## List of 3
 ##  $ r: num [1:6, 1:6] 1 NA 0.5 -0.5 NA NA NA 1 NA NA ...
@@ -807,9 +826,12 @@ div.tocify {
 ## MFZ 1.594538e-57
 ## PDZ 5.213850e-01
 ## TBZ 0.000000e+00</code></pre>
-<p>plot correlation</p>
+</div>
+<div id="publication-plot-1" class="section level3">
+<h3>Publication plot</h3>
 <pre><code>## png 
 ##   2</code></pre>
+</div>
 </div>
 
 

@@ -10,7 +10,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Load packages
+# Load packages
 ```{r libs, warning = FALSE, message= FALSE}
 list.of.packages <-
   c(
@@ -59,7 +59,7 @@ rm(list.of.packages, new.packages, packages_load)
 #install.packages("ROCR", repos = c(CRAN="https://cran.r-project.org/"))
 ```
   
-## Load the disease data and convert to proportions. 
+# Load the disease data and convert to proportions. 
 ```{r importdata, warning = FALSE, message= FALSE}
 dta <- read_excel("dta/Cougar Oct 28dpi combined.xlsx", 
                 sheet = "Sheet1",
@@ -110,7 +110,7 @@ dta$Variety_Source <-  factor(dta$Variety_Source)
 ```
 
 
-## Model Fitting 
+# Model Fitting 
 A small numeric constant was added to avoid fitting the zero inflated model. 
 ```{r}
 dta$Pycnidia[dta$Pycnidia == 0] <- 1e-10
@@ -155,7 +155,7 @@ t1 <- broom.mixed::tidy(fit, conf.int = TRUE)
 ```
 
 
-## Posthoc
+# Posthoc
 ```{r}
 d1 <- effect("Variety_Source", fit)   # save the estimates for your target effect
 d1 <-as.data.frame(d1)
@@ -173,7 +173,7 @@ posthoclett <-
 
 ```
 
-## Final plot
+# Final plot
 
 ```{r plot,  warning = FALSE, message= FALSE}
 left_join(dta, d1, by = "Variety_Source") %>%
