@@ -1,5 +1,6 @@
 ---
 title: "Fungicide sensitivity assessments"
+bibliography: "packages.bib"
 output:
   html_document
 ---
@@ -9,7 +10,7 @@ knitr::opts_chunk$set(fig.width=6.5, fig.height=5,
 
 ```
 
-## Load packages
+# Load packages
 ```{r libs, warning = FALSE, message= FALSE}
 list.of.packages <-
   c(
@@ -66,7 +67,7 @@ rm(list.of.packages, new.packages, packages_load)
 #if instal is not working try 
 #install.packages("ROCR", repos = c(CRAN="https://cran.r-project.org/"))
 ```
-## Import data
+# Import data
 ```{r importdata, warning = FALSE, message= FALSE}
 dta <- read_excel("dta/Fungicide.xlsx", 
                 sheet = "Sheet1",
@@ -75,7 +76,7 @@ summary(dta)
 dta <- 
   pivot_wider(dta, names_from  = "Chemical", values_from = "EC50" )
 ```
-## Fitting models
+# Fitting models
 ```{r}
 one.way <- aov(APN ~ Year, data = dta)
 
@@ -295,7 +296,7 @@ dta <-
              values_to = "EC50")
 ```
 
-## Publication plot
+# Publication plot
 Prepare the data for plotting. 
 
 ```{r}
@@ -378,7 +379,7 @@ plotdata %>%
   ) 
 ```
 
-## Cross-resistance between fungicides 
+# Cross-resistance between fungicides 
 
 ```{r}
 dta <- 
@@ -386,7 +387,7 @@ dta <-
 dta <- dta[c("APN","FNX","FLX","MFZ","PDZ","TBZ")]
 ```
 
-### Correlation charts
+# Correlation charts
 ```{r}
 chart.Correlation(dta)
 ```
@@ -443,7 +444,7 @@ p.mat
 
 ```
 
-### Publication plot
+# Publication plot
 ```{r}
 col <-
   colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))

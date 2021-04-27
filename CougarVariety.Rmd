@@ -9,7 +9,7 @@ knitr::opts_chunk$set(fig.width=6.5, fig.height=5,
                       echo=FALSE, warning=FALSE, message=FALSE)
 ```
 
-## Load packages
+# Load packages
 ```{r libs, warning = FALSE, message= FALSE}
 list.of.packages <-
   c(
@@ -54,7 +54,7 @@ rm(list.of.packages, new.packages, packages_load)
 #install.packages("ROCR", repos = c(CRAN="https://cran.r-project.org/"))
 ```
   
-## Load the disease data
+# Load the disease data
 ```{r importdata, warning = FALSE, message= FALSE}
 dta <- read_excel("dta/Cougar Varieties Glasshouse 28dpi combined.xlsx", 
                 sheet = "Sheet2",
@@ -68,7 +68,7 @@ gt(head(dta))
 ```
 
 
-## Data Visualisation
+# Data Visualisation
 ```{r}
 dta %>%
   ggplot() +
@@ -108,7 +108,7 @@ dta$Variety_Source <-  factor(dta$Variety_Source)
 ```
 
 
-## Model Fitting 
+# Model Fitting 
 A small numeric constant was added to avoid fitting the zero inflated model. 
 ```{r}
 dta$Pycnidia[dta$Pycnidia == 0] <- 1e-10
@@ -170,7 +170,7 @@ posthoclett <-
 
 ```
 
-## Publication plot
+# Publication plot
 Prepare data for plotting,
 ```{r}
 plotdata <- 
