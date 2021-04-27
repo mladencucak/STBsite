@@ -1,0 +1,233 @@
+---
+title: "Cougar varieties screen"
+output:
+  html_document:
+    df_print: paged
+---
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=6.5, fig.height=5,
+                      echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+## Load packages
+```{r libs, warning = FALSE, message= FALSE}
+list.of.packages <-
+  c(
+    "tidyverse",
+    "ggplot2",
+    "knitr",
+    "padr",
+    "devtools",
+    "readxl",
+    "glmmTMB",
+    "emmeans",
+    "effects",
+    "multcomp",
+    "broom",
+    "broom.mixed",
+    "gt"
+  )
+
+new.packages <-
+  list.of.packages[!(list.of.packages %in% installed.packages()[, "Package"])]
+
+#Download packages that are not already present in the library
+if (length(new.packages))
+  install.packages(new.packages)
+
+packages_load <-
+  lapply(list.of.packages, require, character.only = TRUE)
+
+#Print warning if there is a problem with installing/loading some of packages
+if (any(as.numeric(packages_load) == 0)) {
+  warning(paste("Package/s: ", paste(list.of.packages[packages_load != TRUE], sep = ", "), "not loaded!"))
+} else {
+  print("All packages were successfully loaded.")
+}
+
+#Save list of packages used in the analysis
+knitr::write_bib(file = here::here(paste0("ref/", rmarkdown::metadata$title,"packages.bib")))
+
+rm(list.of.packages, new.packages, packages_load)
+
+#if instal is not working try 
+#install.packages("ROCR", repos = c(CRAN="https://cran.r-project.org/"))
+```
+  
+## Load the disease data
+```{r importdata, warning = FALSE, message= FALSE}
+dta <- read_excel("dta/Cougar Varieties Glasshouse 28dpi combined.xlsx", 
+                sheet = "Sheet2",
+                col_types = c("numeric", "numeric", "text", 
+                              "text", "skip", "numeric"))
+
+dta <-
+dta %>% 
+  mutate(Pycnidia = Pycnidia/100)
+gt(head(dta))
+```
+
+
+
+```{r}
+dta %>%
+  ggplot() +
+    geom_boxplot(aes(Source, Pycnidia), colour = "black", width = 0.3) +
+  geom_point(
+    aes(Source, Pycnidia,  colour = Source),
+    width = 0.1,
+    size = 1,
+    position = position_jitter(width = 0.2, height = 0)
+  ) +
+  ggtitle("") +
+  ylab("Disease (%)") +
+  xlab("Cultivar") +
+  labs(color = "Variety") +
+  egg::theme_article() +
+  coord_equal(8 / 3) +
+  scale_y_continuous(limits = c(0, 1)) +
+  facet_wrap( ~ Variety) +
+  ggsave(here::here("res", "Varietytest.png"),
+         width = 5.5,
+         height = 5.5)
+```
+
+
+
+```{r}
+hist(dta$Pycnidia, breaks = 20 )
+
+```
+
+
+The test variable was made by concatenating the test cultivar and the source cultivar names. 
+```{r}
+dta<-  tidyr::unite(dta, "Variety_Source", c("Variety", "Source"), remove = FALSE)
+dta$Variety_Source <-  factor(dta$Variety_Source)
+
+```
+
+
+## Model Fitting 
+A small numeric constant was added to avoid fitting the zero inflated model. 
+```{r}
+dta$Pycnidia[dta$Pycnidia == 0] <- 1e-10
+
+```
+
+
+Accounting for random effects results in appropriate estimates of fixed effects which is why we used generalized linear mixed model (GLMM). Since the values of the response variable, rAUDPC are proportions, beta GLMMs. Stochastic (random-effect) component was the test and the deterministic (fixed-effect) were block and the combined variable (Test_Source). 
+```{r}
+fit <- glmmTMB(Pycnidia ~ Exp + Variety_Source+ (1|Isolate), 
+               family = beta_family(), 
+               data = dta)
+car::Anova(fit)
+
+```
+
+
+Block is not significant so we can remove it.
+```{r}
+fit <- glmmTMB(Pycnidia ~  Variety_Source + (1|Isolate), 
+               family = beta_family(), 
+               data = dta)
+summary(fit)
+car::Anova(fit)
+drop1(fit, Variety = "Chisq")
+```
+
+
+Goodness-of-fit of the models was evaluated using the qqplots of residuals. 
+```{r}
+qqnorm(residuals(fit))
+plot(jitter(fitted(fit)),residuals(fit),xlab="Fitted",ylab="Residuals")
+```
+
+
+
+```{r}
+t1 <- broom.mixed::tidy(fit, conf.int = TRUE)
+# t1 <-  
+  filter(t1, effect != "ran_pars") %>% 
+    dplyr::select(-c(component, group))
+
+```
+
+```{r}
+d1 <- effect("Variety_Source", fit)   # save the estimates for your target effect
+d1 <-as.data.frame(d1)
+```
+
+
+
+```{r}
+posthoc<- lsmeans::lsmeans(fit, pairwise~Variety_Source, adjust="tukey")
+posthoclett <- 
+    cld(posthoc[[1]], 
+        level =.05,
+        alpha = .05,
+        Letters=letters)
+
+```
+
+
+prepare data for plotting
+```{r}
+plotdata <- 
+left_join(dta, d1, by = "Variety_Source") %>%
+  left_join(., posthoclett, by = "Variety_Source") %>%
+  mutate_if(sapply(., is.character), as.factor) %>%
+  group_by(Source,Variety) %>%
+  mutate(letter_height = max(Pycnidia),
+         .group = trimws(.group)) %>%
+  ungroup() %>% 
+  mutate(cr = ifelse(Variety %in% c("Colosseum", "Firefly",
+                               "Merit","Rembrandt",
+                               "Saki", "Silver Sufer"), 
+                "nonCRV",
+                 "CRV"),
+         cr = factor(cr, levels = c("nonCRV", "CRV")))
+
+```
+
+```{r plot,  warning = FALSE, message= FALSE}
+(p1 <- 
+plotdata %>%
+  mutate(Variety = fct_reorder(Variety, desc(cr))) %>%
+  ggplot() +
+  geom_text(aes(label = .group, y = letter_height + .16, x = Source),
+            size = 3.5) +
+  geom_errorbar(
+    aes(x = Source, ymin = lower, ymax = upper),
+    position = position_dodge(),
+    width = 0.2,
+    size = .5,
+    alpha = .8
+  ) +
+  geom_point(
+    aes(Source, Pycnidia, colour = Source),
+    width = 0.1,
+    size = .9,
+    alpha = .6,
+    position = position_jitter(width = 0.2, height = 0)
+  ) +
+  ylab("Proportion of leaf 2 bearing pycnidia (28 dpi)") +
+  xlab("Cultivar") +
+  labs(color = "Source:") +
+  egg::theme_article() +
+  scale_y_continuous(limits = c(0, 1.05)) +
+  facet_wrap(~ Variety, nrow = 2) +
+    theme(text = element_text(size = 11),
+        legend.position = "top",
+        axis.title = element_text(size= 10)) +
+  guides(colour = guide_legend(override.aes = list(size=3)))+
+  scale_color_brewer(palette = "Dark2"))
+
+  ggsave(
+    plot = p1,
+    here::here("res", "final_plot_Cougar_varieties2021.png"),
+    width = 6,
+    height = 4.5,
+    dpi =400
+  )
+```

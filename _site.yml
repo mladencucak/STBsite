@@ -1,0 +1,24 @@
+name: STB 
+output_dir: '.'
+navbar:
+  title: STB
+  left:
+  - text: Intro
+    href: index.html
+  - text: Cougar screen
+    href: Cougar.html
+  - text: Cougar varieties screen
+    href: CougarVariety.html
+  - text: Fungicide sensitivity 
+    href: FungSens.html
+
+output:
+  html_document:
+    theme: readable
+    highlight: monochrome
+    css: styles.css
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    lib_dir: site_libs
+    self_contained: no

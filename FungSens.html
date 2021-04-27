@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Fungicide sensitivity</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">STB</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Intro</a>
+</li>
+<li>
+  <a href="Cougar.html">Cougar screen</a>
+</li>
+<li>
+  <a href="CougarVariety.html">Cougar varieties screen</a>
+</li>
+<li>
+  <a href="FungSens.html">Fungicide sensitivity</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Fungicide sensitivity</h1>
+
+</div>
+
+
+<div id="load-packages" class="section level2">
+<h2>Load packages</h2>
+<pre><code>## [1] &quot;All packages were successfully loaded.&quot;</code></pre>
+<pre><code>##    Isolate              Year             Chemical              EC50        
+##  Length:1614        Length:1614        Length:1614        Min.   :-3.0000  
+##  Class :character   Class :character   Class :character   1st Qu.:-0.9819  
+##  Mode  :character   Mode  :character   Mode  :character   Median :-0.3204  
+##                                                           Mean   :-0.3056  
+##                                                           3rd Qu.: 0.3621  
+##                                                           Max.   : 1.6358  
+##                                                           NA&#39;s   :5</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## Year          4  25.31   6.326   18.41 2.34e-13 ***
+## Residuals   264  90.72   0.344                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = APN ~ Year, data = dta)
+## 
+## $Year
+##                  diff          lwr       upr     p adj
+## 2019-2016  0.36811202  0.044444749 0.6917793 0.0168337
+## AST-2016   0.55721347  0.246487819 0.8679391 0.0000146
+## JBD-2016   0.86432081  0.552335826 1.1763058 0.0000000
+## SAK-2016   0.78449566  0.469871169 1.0991202 0.0000000
+## AST-2019   0.18910145 -0.123322327 0.5015252 0.4590315
+## JBD-2019   0.49620879  0.182532498 0.8098851 0.0001920
+## SAK-2019   0.41638365  0.100081954 0.7326853 0.0032756
+## JBD-AST    0.30710734  0.006802917 0.6074118 0.0422203
+## SAK-AST    0.22728219 -0.075763495 0.5303279 0.2407469
+## SAK-JBD   -0.07982514 -0.384161942 0.2245117 0.9516668</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = APN ~ Year, data = dta)
+## 
+## $Year
+##                  diff          lwr       upr     p adj
+## 2019-2016  0.36811202  0.044444749 0.6917793 0.0168337
+## AST-2016   0.55721347  0.246487819 0.8679391 0.0000146
+## JBD-2016   0.86432081  0.552335826 1.1763058 0.0000000
+## SAK-2016   0.78449566  0.469871169 1.0991202 0.0000000
+## AST-2019   0.18910145 -0.123322327 0.5015252 0.4590315
+## JBD-2019   0.49620879  0.182532498 0.8098851 0.0001920
+## SAK-2019   0.41638365  0.100081954 0.7326853 0.0032756
+## JBD-AST    0.30710734  0.006802917 0.6074118 0.0422203
+## SAK-AST    0.22728219 -0.075763495 0.5303279 0.2407469
+## SAK-JBD   -0.07982514 -0.384161942 0.2245117 0.9516668</code></pre>
+<pre><code>## $statistics
+##     MSerror  Df    Mean        CV
+##   0.3436357 264 -1.0174 -57.61791
+## 
+## $parameters
+##    test name.t ntr StudentizedRange alpha
+##   Tukey   Year   5         3.884455  0.05
+## 
+## $means
+##             APN       std  r       Min         Max        Q25        Q50
+## 2016 -1.5481410 0.7161302 50 -3.000000 -0.31451053 -2.2051428 -1.4482921
+## 2019 -1.1800290 0.7025294 49 -2.930650  0.51851394 -1.5338226 -1.1866469
+## AST  -0.9909276 0.5146735 58 -2.378586  0.16035483 -1.2943918 -0.8709644
+## JBD  -0.6838202 0.4215659 57 -1.938074 -0.02429144 -0.9137959 -0.6089694
+## SAK  -0.7636454 0.5585928 55 -2.090002  0.77582989 -1.1931498 -0.8335500
+##             Q75
+## 2016 -0.9552615
+## 2019 -0.7949046
+## AST  -0.7901017
+## JBD  -0.3924923
+## SAK  -0.4230141
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##             APN groups
+## JBD  -0.6838202      a
+## SAK  -0.7636454     ab
+## AST  -0.9909276     bc
+## 2019 -1.1800290      c
+## 2016 -1.5481410      d
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<p>Fenpicoxamid</p>
+<pre><code>##              Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## Year          4   2.23  0.5583   4.073 0.00321 **
+## Residuals   261  35.78  0.1371                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 3 observations deleted due to missingness</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-7-1.png" width="624" /></p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = FNX ~ Year, data = dta)
+## 
+## $Year
+##                   diff         lwr       upr     p adj
+## 2019-2016  0.115921745 -0.08852041 0.3203639 0.5260541
+## AST-2016   0.247115461  0.04838511 0.4458458 0.0065675
+## JBD-2016   0.222596943  0.02553382 0.4196601 0.0179751
+## SAK-2016   0.224465877  0.02573552 0.4231962 0.0179860
+## AST-2019   0.131193715 -0.06859603 0.3309835 0.3735579
+## JBD-2019   0.106675198 -0.09145623 0.3048066 0.5770792
+## SAK-2019   0.108544131 -0.09124561 0.3083339 0.5683526
+## JBD-AST   -0.024518518 -0.21675072 0.1677137 0.9967534
+## SAK-AST   -0.022649584 -0.21659055 0.1712914 0.9976966
+## SAK-JBD    0.001868934 -0.19036327 0.1941011 0.9999999</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
+<pre><code>## $statistics
+##     MSerror  Df      Mean        CV
+##   0.1370795 261 -1.301306 -28.45161
+## 
+## $parameters
+##    test name.t ntr StudentizedRange alpha
+##   Tukey   Year   5         3.884764  0.05
+## 
+## $means
+##            FNX       std  r       Min        Max       Q25       Q50        Q75
+## 2016 -1.467867 0.3235372 50 -2.389514 -0.5583899 -1.648433 -1.482538 -1.3176616
+## 2019 -1.351945 0.4059032 49 -1.973711 -0.4080534 -1.688401 -1.428896 -1.0583018
+## AST  -1.220751 0.3988887 55 -1.905766 -0.2646526 -1.554726 -1.259383 -1.0090504
+## JBD  -1.245270 0.3453364 57 -2.121834 -0.4668240 -1.487408 -1.319063 -1.0257168
+## SAK  -1.243401 0.3719266 55 -2.107144 -0.5132036 -1.533607 -1.203895 -0.9904763
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##            FNX groups
+## AST  -1.220751      a
+## SAK  -1.243401      a
+## JBD  -1.245270      a
+## 2019 -1.351945     ab
+## 2016 -1.467867      b
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## Year          4  15.48   3.871   16.39 5.26e-12 ***
+## Residuals   264  62.36   0.236                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-13-1.png" width="624" /></p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = FLX ~ Year, data = dta)
+## 
+## $Year
+##                  diff         lwr       upr     p adj
+## 2019-2016  0.43212192  0.16376467 0.7004792 0.0001381
+## AST-2016   0.53252074  0.27489357 0.7901479 0.0000004
+## JBD-2016   0.70831344  0.44964215 0.9669847 0.0000000
+## SAK-2016   0.59862616  0.33776641 0.8594859 0.0000000
+## AST-2019   0.10039881 -0.15863629 0.3594339 0.8244830
+## JBD-2019   0.27619152  0.01611794 0.5362651 0.0311678
+## SAK-2019   0.16650424 -0.09574610 0.4287546 0.4089307
+## JBD-AST    0.17579271 -0.07319406 0.4247795 0.2992140
+## SAK-AST    0.06610542 -0.18515417 0.3173650 0.9511423
+## SAK-JBD   -0.10968728 -0.36201736 0.1426428 0.7548594</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-16-1.png" width="624" /></p>
+<pre><code>## $statistics
+##     MSerror  Df      Mean      CV
+##   0.2362258 264 0.4355348 111.594
+## 
+## $parameters
+##    test name.t ntr StudentizedRange alpha
+##   Tukey   Year   5         3.884455  0.05
+## 
+## $means
+##              FLX       std  r        Min      Max        Q25        Q50
+## 2016 -0.03048186 0.5971514 50 -1.2696653 1.477108 -0.4725977 -0.0730426
+## 2019  0.40164006 0.5373873 49 -0.9395399 1.477121  0.1927675  0.4417933
+## AST   0.50203888 0.4816302 58 -0.7146025 1.635752  0.2483513  0.4955497
+## JBD   0.67783158 0.3776901 57  0.1021444 1.477121  0.4120069  0.5969382
+## SAK   0.56814430 0.4264079 55 -0.3670181 1.477121  0.2532252  0.4589290
+##            Q75
+## 2016 0.4319779
+## 2019 0.6916897
+## AST  0.7163198
+## JBD  0.9648940
+## SAK  0.7840239
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##              FLX groups
+## JBD   0.67783158      a
+## SAK   0.56814430     ab
+## AST   0.50203888     ab
+## 2019  0.40164006      b
+## 2016 -0.03048186      c
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## Year          4   6.52  1.6297   3.725 0.00573 **
+## Residuals   264 115.49  0.4375                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-19-1.png" width="624" /></p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = MFZ ~ Year, data = dta)
+## 
+## $Year
+##                  diff         lwr        upr     p adj
+## 2019-2016  0.37544697  0.01025516 0.74063878 0.0405182
+## AST-2016   0.26227426 -0.08831560 0.61286412 0.2431106
+## JBD-2016   0.45291882  0.10090806 0.80492958 0.0043693
+## SAK-2016   0.17846087 -0.17652803 0.53344977 0.6405032
+## AST-2019  -0.11317271 -0.46567856 0.23933314 0.9034190
+## JBD-2019   0.07747185 -0.27644720 0.43139090 0.9748023
+## SAK-2019  -0.19698610 -0.55386738 0.15989517 0.5529298
+## JBD-AST    0.19064456 -0.14818709 0.52947621 0.5338776
+## SAK-AST   -0.08381339 -0.42573800 0.25811122 0.9620120
+## SAK-JBD   -0.27445795 -0.61783931 0.06892341 0.1846293</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-22-1.png" width="624" /></p>
+<pre><code>## $statistics
+##     MSerror  Df       Mean        CV
+##   0.4374644 264 -0.4568642 -144.7719
+## 
+## $parameters
+##    test name.t ntr StudentizedRange alpha
+##   Tukey   Year   5         3.884455  0.05
+## 
+## $means
+##             MFZ       std  r       Min       Max        Q25        Q50
+## 2016 -0.7142640 0.7445016 50 -2.784500 0.9516352 -1.1812634 -0.6069143
+## 2019 -0.3388170 0.7567105 49 -1.934464 1.0000000 -0.9115005 -0.4598453
+## AST  -0.4519897 0.5428365 58 -1.682441 1.0000000 -0.7946237 -0.4802192
+## JBD  -0.2613451 0.6285287 57 -1.643941 0.8768086 -0.6617156 -0.2111216
+## SAK  -0.5358031 0.6372171 55 -1.613926 1.0000000 -1.0562258 -0.5158055
+##              Q75
+## 2016 -0.24293586
+## 2019  0.09286155
+## AST  -0.03848179
+## JBD   0.20878952
+## SAK  -0.18310722
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##             MFZ groups
+## JBD  -0.2613451      a
+## 2019 -0.3388170      a
+## AST  -0.4519897     ab
+## SAK  -0.5358031     ab
+## 2016 -0.7142640      b
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+## Year          4   8.75  2.1886   11.29 1.8e-08 ***
+## Residuals   263  50.97  0.1938                    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 1 observation deleted due to missingness</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-25-1.png" width="624" /></p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = PDZ ~ Year, data = dta)
+## 
+## $Year
+##                  diff         lwr          upr     p adj
+## 2019-2016  0.22214944 -0.02213832  0.466437199 0.0941999
+## AST-2016  -0.22961416 -0.46423393  0.005005607 0.0584048
+## JBD-2016  -0.27721339 -0.51277375 -0.041653031 0.0119756
+## SAK-2016  -0.18804211 -0.42557406  0.049489834 0.1926480
+## AST-2019  -0.45176360 -0.68638337 -0.217143834 0.0000026
+## JBD-2019  -0.49936283 -0.73492319 -0.263802472 0.0000002
+## SAK-2019  -0.41019155 -0.64772350 -0.172659606 0.0000338
+## JBD-AST   -0.04759923 -0.27311777  0.177919303 0.9779603
+## SAK-AST    0.04157205 -0.18600509  0.269149181 0.9871417
+## SAK-JBD    0.08917128 -0.13937544  0.317717994 0.8209237</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-28-1.png" width="624" /></p>
+<pre><code>## $statistics
+##     MSerror  Df       Mean        CV
+##   0.1937833 263 -0.2196902 -200.3768
+## 
+## $parameters
+##    test name.t ntr StudentizedRange alpha
+##   Tukey   Year   5         3.884557  0.05
+## 
+## $means
+##             PDZ       std  r        Min       Max        Q25         Q50
+## 2016 -0.1130642 0.4974643 49 -1.3732612 1.0000000 -0.4528214 -0.18008423
+## 2019  0.1090853 0.4754179 49 -0.7802108 1.0000000 -0.2318320  0.07464519
+## AST  -0.3426783 0.3821992 58 -0.9630885 0.5859782 -0.6371971 -0.37285946
+## JBD  -0.3902776 0.4560134 57 -1.3421704 0.4132425 -0.7604344 -0.46406224
+## SAK  -0.3011063 0.3912446 55 -0.9605234 0.5951164 -0.5945104 -0.31089774
+##               Q75
+## 2016  0.106268056
+## 2019  0.418813127
+## AST  -0.046571623
+## JBD   0.035271905
+## SAK  -0.004054269
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##             PDZ groups
+## 2019  0.1090853      a
+## 2016 -0.1130642     ab
+## SAK  -0.3011063     bc
+## AST  -0.3426783     bc
+## JBD  -0.3902776      c
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## Year          4   3.73  0.9335   3.596 0.00712 **
+## Residuals   263  68.27  0.2596                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 1 observation deleted due to missingness</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-31-1.png" width="624" /></p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = TBZ ~ Year, data = dta)
+## 
+## $Year
+##                  diff           lwr        upr     p adj
+## 2019-2016  0.09747827 -0.1852611221 0.38021767 0.8781549
+## AST-2016   0.27171807  0.0001684402 0.54326770 0.0497718
+## JBD-2016   0.29845139  0.0258131070 0.57108966 0.0239875
+## SAK-2016   0.06639194 -0.2085282590 0.34131214 0.9639885
+## AST-2019   0.17423980 -0.0973098323 0.44578943 0.3978158
+## JBD-2019   0.20097311 -0.0716651655 0.47361139 0.2570187
+## SAK-2019  -0.03108633 -0.3060065315 0.24383387 0.9979702
+## JBD-AST    0.02673331 -0.2342825251 0.28774915 0.9986225
+## SAK-AST   -0.20532613 -0.4687246000 0.05807234 0.2058984
+## SAK-JBD   -0.23205944 -0.4965801090 0.03246122 0.1159021</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-34-1.png" width="624" /></p>
+<pre><code>## $statistics
+##     MSerror  Df      Mean       CV
+##   0.2595886 263 0.7190166 70.86045
+## 
+## $parameters
+##    test name.t ntr StudentizedRange alpha
+##   Tukey   Year   5         3.884557  0.05
+## 
+## $means
+##            TBZ       std  r        Min      Max       Q25       Q50      Q75
+## 2016 0.5652876 0.5042321 49 -0.4498578 1.401063 0.1844393 0.4511855 1.042483
+## 2019 0.6627659 0.4938552 49 -0.3414015 1.477121 0.2414139 0.5473586 1.119086
+## AST  0.8370057 0.4930212 58 -0.1793866 1.477121 0.4721400 0.8847330 1.208746
+## JBD  0.8637390 0.5297143 57 -0.3074298 1.525544 0.4414984 1.0426936 1.285752
+## SAK  0.6316796 0.5233884 55 -0.1542300 1.477121 0.1362570 0.6110398 1.120301
+## 
+## $comparison
+## NULL
+## 
+## $groups
+##            TBZ groups
+## JBD  0.8637390      a
+## AST  0.8370057      a
+## 2019 0.6627659     ab
+## SAK  0.6316796     ab
+## 2016 0.5652876      b
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;group&quot;</code></pre>
+<p>Convert the data in longer format.</p>
+<p>Prepare the data for plotting.</p>
+<p>Plot in one row.</p>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-39-1.png" width="624" /></p>
+<p>Plot in two rows.</p>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-40-1.png" width="624" /></p>
+</div>
+<div id="correlations" class="section level2">
+<h2>Correlations</h2>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-42-1.png" width="624" /></p>
+<pre><code>## List of 3
+##  $ r: num [1:6, 1:6] 1 NA 0.5 -0.5 NA NA NA 1 NA NA ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:6] &quot;APN&quot; &quot;FNX&quot; &quot;FLX&quot; &quot;MFZ&quot; ...
+##   .. ..$ : chr [1:6] &quot;APN&quot; &quot;FNX&quot; &quot;FLX&quot; &quot;MFZ&quot; ...
+##  $ n: int [1:6, 1:6] 3 0 3 3 0 0 0 1 0 0 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:6] &quot;APN&quot; &quot;FNX&quot; &quot;FLX&quot; &quot;MFZ&quot; ...
+##   .. ..$ : chr [1:6] &quot;APN&quot; &quot;FNX&quot; &quot;FLX&quot; &quot;MFZ&quot; ...
+##  $ P: num [1:6, 1:6] NA NaN 0.667 0.667 NaN ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:6] &quot;APN&quot; &quot;FNX&quot; &quot;FLX&quot; &quot;MFZ&quot; ...
+##   .. ..$ : chr [1:6] &quot;APN&quot; &quot;FNX&quot; &quot;FLX&quot; &quot;MFZ&quot; ...
+##  - attr(*, &quot;class&quot;)= chr &quot;rcorr&quot;</code></pre>
+<pre><code>## png 
+##   2</code></pre>
+<pre><code>##            APN        FNX       FLX       MFZ         PDZ        TBZ
+## APN 1.00000000 0.41555117 0.7302628 0.5415755  0.02853355  0.4401973
+## FNX 0.41555117 1.00000000 0.4420474 0.3977872  0.05796908  0.2357230
+## FLX 0.73026275 0.44204739 1.0000000 0.4867796  0.17783377  0.2999092
+## MFZ 0.54157548 0.39778723 0.4867796 1.0000000  0.27227302  0.7797880
+## PDZ 0.02853355 0.05796908 0.1778338 0.2722730  1.00000000 -0.0765985
+## TBZ 0.44019732 0.23572296 0.2999092 0.7797880 -0.07659850  1.0000000</code></pre>
+<pre><code>##              APN          FNX          FLX          MFZ          PDZ
+## APN           NA 1.575184e-12 0.000000e+00 0.000000e+00 6.419131e-01
+## FNX 1.575184e-12           NA 3.752554e-14 1.614353e-11 3.472186e-01
+## FLX 0.000000e+00 3.752554e-14           NA 0.000000e+00 3.489387e-03
+## MFZ 0.000000e+00 1.614353e-11 0.000000e+00           NA 6.120247e-06
+## PDZ 6.419131e-01 3.472186e-01 3.489387e-03 6.120247e-06           NA
+## TBZ 3.952394e-14 1.071154e-04 5.662079e-07 0.000000e+00 2.113188e-01
+##              TBZ
+## APN 3.952394e-14
+## FNX 1.071154e-04
+## FLX 5.662079e-07
+## MFZ 0.000000e+00
+## PDZ 2.113188e-01
+## TBZ           NA</code></pre>
+<p><img src="FungSens_files/figure-html/unnamed-chunk-46-1.png" width="624" /></p>
+<pre><code>##              APN          FNX          FLX          MFZ          PDZ
+## APN 0.000000e+00 2.000625e-13 4.595506e-56 1.914730e-19 9.502367e-01
+## FNX 2.000625e-13 0.000000e+00 7.281777e-14 1.514663e-13 3.407590e-01
+## FLX 4.595506e-56 7.281777e-14 0.000000e+00 1.961074e-15 7.611044e-02
+## MFZ 1.914730e-19 1.514663e-13 1.961074e-15 0.000000e+00 2.414151e-06
+## PDZ 9.502367e-01 3.407590e-01 7.611044e-02 2.414151e-06 0.000000e+00
+## TBZ 6.517665e-14 1.909759e-05 3.012742e-07 1.594538e-57 5.213850e-01
+##              TBZ
+## APN 6.517665e-14
+## FNX 1.909759e-05
+## FLX 3.012742e-07
+## MFZ 1.594538e-57
+## PDZ 5.213850e-01
+## TBZ 0.000000e+00</code></pre>
+<p>plot correlation</p>
+<pre><code>## png 
+##   2</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
