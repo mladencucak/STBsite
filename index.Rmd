@@ -20,6 +20,7 @@ If there are any problems reproducing the analysis, please submit an issue on Gi
 ## Project team
 
 Maynooth University:  
+  
 - [Stephen Kildea](https://www.teagasc.ie/contact/staff-directory/k/stephen-kildea/)
 
 - [Liam Sheppard](https://www.teagasc.ie/contact/staff-directory/s/liam-sheppard/)
@@ -31,12 +32,12 @@ Maynooth University:
 
 ## Packages used in the analysis
 
-```{r echo=F}
+```{r echo=F, message=F, warning=F}
 library(tidyverse)
-pckgs <- 
+(pckgs <- 
 lapply(list.files(here::here("ref"), full.names = T, pattern = ".rds"), readRDS) %>% 
   flatten_chr() %>%
-  unique()
+  unique())
 
 knitr::write_bib(c(pckgs, "bookdown"), "ref/packages.bib")
 ```
@@ -56,8 +57,8 @@ We welcome contributions from everyone. Before you get started, please see our [
 
 # References
 
-Auguie B, 2019. egg: Extensions for ggplot2: Custom Geom, Custom Themes, Plot Alignment, Labelled Panels, Symmetric Scales, and Fixed Panel Size.
-Bolker B, Robinson D, 2020. broom.mixed: Tidying Methods for Mixed Models.
+Auguie B, 2019. egg: Extensions for ggplot2: Custom Geom, Custom Themes, Plot Alignment, Labelled Panels, Symmetric Scales, and Fixed Panel Size.  
+Bolker B, Robinson D, 2020. broom.mixed: Tidying Methods for Mixed Models.  
 Brooks ME, Kristensen K, Benthem KJ van et al., 2017. glmmTMB Balances Speed and Flexibility Among Packages for Zero-inflated Generalized Linear Mixed Modeling. The R Journal 9, 378–400.
 Fox J, 2003. Effect Displays in R for Generalised Linear Models. Journal of Statistical Software 8, 1–27.
 Fox J, Hong J, 2009. Effect Displays in R for Multinomial and Proportional-Odds Logit Models: Extensions to the effects Package. Journal of Statistical Software 32, 1–24.
